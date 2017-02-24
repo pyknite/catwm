@@ -32,8 +32,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-// Mod (Mod1 == alt) and master size
-#define MOD             Mod1Mask
+// Mod (Mod4 == enter) and master size
+#define MOD             Mod4Mask
 #define MASTER_SIZE     0.6
 
 // Colors
