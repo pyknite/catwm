@@ -33,7 +33,7 @@
 #define CONFIG_H
 
 // Mod (Mod4 == enter) and master size
-#define MOD             Mod4Mask
+#define MOD             Mod1Mask
 #define MASTER_SIZE     0.6
 
 // Colors
