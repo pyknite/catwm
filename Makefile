@@ -1,5 +1,5 @@
 CFLAGS+= -Wall
-LDADD+= -lX11 
+LDADD+= -lX11
 LDFLAGS=
 EXEC=catwm
 
@@ -17,4 +17,4 @@ install: all
 	install -Dm 755 catwm $(DESTDIR)$(BINDIR)/catwm
 
 clean:
-	rm -f catwm *.o
+	rm -f $(EXEC) *.o
