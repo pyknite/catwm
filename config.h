@@ -32,7 +32,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-// Mod (Mod4 == enter) and master size
+// Mod (Mod1 == alt) and master size
 #define MOD             Mod1Mask
 #define MASTER_SIZE     0.6
 
