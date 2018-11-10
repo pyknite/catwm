@@ -40,6 +40,8 @@
 #define FOCUS           "rgb:bc/57/66"
 #define UNFOCUS         "rgb:88/88/88"
 
+#define BORDERW 4
+
 const char* dmenucmd[] = {"dmenu_run",NULL};
 const char* urxvtcmd[] = {"urxvt",NULL};
 const char* lockcmd[]  = {"slock",NULL};
