@@ -287,13 +287,15 @@ void increase() {
 }
 
 void keypress(XEvent *e) {
-    int i;
-    XKeyEvent ke = e->xkey;
-    KeySym keysym = XKeycodeToKeysym(dis,ke.keycode,0);
+    unsigned int i;
+    //XKeyEvent ke = e->xkey;
 
+    int keysyms_per_keycode;
+    KeySym keysym = XGetKeyboardMapping(dis, (unsigned char)(e->xkey.keycode), 1, &keysyms_per_keycode)[0];
     for(i=0;i<TABLENGTH(keys);++i) {
-        if(keys[i].keysym == keysym && keys[i].mod == ke.state) {
+        if(keys[i].mod == e->xkey.state && keys[i].keysym == keysym  ) {
             keys[i].function(keys[i].arg);
+            break;
         }
     }
 }
@@ -614,18 +616,18 @@ void tile() {
 
     // If only one window
     if(head != NULL && head->next == NULL) {
-        XMoveResizeWindow(dis,head->win,0,0,sw-2,sh-2);
+        XMoveResizeWindow(dis,head->win,0,0,sw-2*BORDERW,sh-2*BORDERW);
     }
     else if(head != NULL) {
         switch(mode) {
             case 0:
                 // Master window
-                XMoveResizeWindow(dis,head->win,0,0,master_size-2,sh-2);
+                XMoveResizeWindow(dis,head->win,0,0,master_size-2*BORDERW,sh-2*BORDERW);
 
                 // Stack
                 for(c=head->next;c;c=c->next) ++n;
                 for(c=head->next;c;c=c->next) {
-                    XMoveResizeWindow(dis,c->win,master_size,y,sw-master_size-2,(sh/n)-2);
+                    XMoveResizeWindow(dis,c->win,master_size,y,sw-master_size-2*BORDERW,(sh/n)-2*BORDERW);
                     y += sh/n;
                 }
                 break;
