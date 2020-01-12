@@ -38,6 +38,7 @@
 #include <signal.h>
 #include <sys/wait.h>
 
+#define GAPS 12
 #define TABLENGTH(X)    (sizeof(X)/sizeof(*X))
 
 typedef union {
@@ -610,23 +611,23 @@ void switch_mode() {
 void tile() {
     client *c;
     int n = 0;
-    int y = 0;
-
+    int y = GAPS;
     // If only one window
     if(head != NULL && head->next == NULL) {
-        XMoveResizeWindow(dis,head->win,0,0,sw-2,sh-2);
+        XMoveResizeWindow(dis,head->win,GAPS,GAPS,sw-2-GAPS*2,sh-2-GAPS*2);
     }
     else if(head != NULL) {
         switch(mode) {
             case 0:
                 // Master window
-                XMoveResizeWindow(dis,head->win,0,0,master_size-2,sh-2);
+                XMoveResizeWindow(dis,head->win,GAPS,GAPS,master_size-2-GAPS*2,sh-2-GAPS*2);
 
                 // Stack
+		int tmpsh = sh-GAPS*2;
                 for(c=head->next;c;c=c->next) ++n;
                 for(c=head->next;c;c=c->next) {
-                    XMoveResizeWindow(dis,c->win,master_size,y,sw-master_size-2,(sh/n)-2);
-                    y += sh/n;
+		    XMoveResizeWindow(dis, c->win, master_size, y, sw-master_size-2-GAPS, (sh/n)-2-GAPS-GAPS/n);
+                    y += sh/n-GAPS/n;
                 }
                 break;
             case 1:
@@ -671,4 +672,3 @@ int main(int argc, char **argv) {
 
     return 0;
 }
-
