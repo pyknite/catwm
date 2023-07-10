@@ -289,10 +289,11 @@ void increase() {
 void keypress(XEvent *e) {
     int i;
     XKeyEvent ke = e->xkey;
-    KeySym keysym = XKeycodeToKeysym(dis,ke.keycode,0);
+    int keysym_return;
+    KeySym *keysym = XGetKeyboardMapping(dis, ke.keycode, 1, &keysym_return);
 
     for(i=0;i<TABLENGTH(keys);++i) {
-        if(keys[i].keysym == keysym && keys[i].mod == ke.state) {
+        if(keys[i].keysym == *keysym && keys[i].mod == ke.state) {
             keys[i].function(keys[i].arg);
         }
     }
