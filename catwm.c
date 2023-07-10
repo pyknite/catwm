@@ -373,10 +373,12 @@ void next_win() {
     client *c;
 
     if(current != NULL && head != NULL) {
-		if(current->next == NULL)
+        if(current->next == NULL) {
             c = head;
-        else
+        }
+        else {
             c = current->next;
+        }
 
         current = c;
         update_current();
