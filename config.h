@@ -40,6 +40,10 @@
 #define FOCUS           "rgb:bc/57/66"
 #define UNFOCUS         "rgb:88/88/88"
 
+// Borders and gap
+#define BORDER_SIZE     6
+#define GAP_SIZE        12
+
 const char* dmenucmd[] = {"dmenu_run",NULL};
 const char* urxvtcmd[] = {"urxvt",NULL};
 const char* lockcmd[]  = {"slock",NULL};

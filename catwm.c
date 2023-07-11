@@ -615,20 +615,32 @@ void tile() {
     int n = 0;
     int y = 0;
 
+
+    int tiledSized = sw - master_size - GAP_SIZE;
+    int numWindows = 0;
+    for(c=head->next;c;c=c->next) ++numWindows;
+    int tiledHeigh = (sh - numWindows * GAP_SIZE);
+    
     // If only one window
     if(head != NULL && head->next == NULL) {
-        XMoveResizeWindow(dis,head->win,0,0,sw-2,sh-2);
+        XMoveResizeWindow(dis,head->win,BORDER_SIZE,BORDER_SIZE,sw-2*BORDER_SIZE-2*GAP_SIZE,sh-2*BORDER_SIZE-2*GAP_SIZE);
     }
     else if(head != NULL) {
         switch(mode) {
             case 0:
                 // Master window
-                XMoveResizeWindow(dis,head->win,0,0,master_size-2,sh-2);
+                XMoveResizeWindow(dis,head->win,BORDER_SIZE,BORDER_SIZE,master_size-2*BORDER_SIZE-GAP_SIZE,sh-2*BORDER_SIZE-GAP_SIZE);
 
                 // Stack
+                int nc = 0;
                 for(c=head->next;c;c=c->next) ++n;
                 for(c=head->next;c;c=c->next) {
-                    XMoveResizeWindow(dis,c->win,master_size,y,sw-master_size-2,(sh/n)-2);
+                    ++nc;
+                    if(nc == n) {
+                        XMoveResizeWindow(dis,c->win,master_size,y+BORDER_SIZE,sw-master_size-BORDER_SIZE-2*GAP_SIZE,(sh/n)-2*BORDER_SIZE-2*GAP_SIZE);
+                    } else {
+                        XMoveResizeWindow(dis,c->win,master_size,y+BORDER_SIZE,sw-master_size-BORDER_SIZE-2*GAP_SIZE,(sh/n)-BORDER_SIZE-2*GAP_SIZE);
+                    }
                     y += sh/n;
                 }
                 break;
@@ -649,7 +661,7 @@ void update_current() {
     for(c=head;c;c=c->next)
         if(current == c) {
             // "Enable" current window
-            XSetWindowBorderWidth(dis,c->win,1);
+            XSetWindowBorderWidth(dis,c->win,7);
             XSetWindowBorder(dis,c->win,win_focus);
             XSetInputFocus(dis,c->win,RevertToParent,CurrentTime);
             XRaiseWindow(dis,c->win);
