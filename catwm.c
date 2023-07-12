@@ -612,29 +612,34 @@ void switch_mode() {
 
 void tile() {
     client *c;
-    int n = 0;
-    int y = 0;
+
+    int border_space = BORDER_SIZE + GAP_SIZE;
 
     // If only one window
     if(head != NULL && head->next == NULL) {
-        XMoveResizeWindow(dis,head->win,0,0,sw-2,sh-2);
+        XMoveResizeWindow(dis,head->win,border_space,border_space,sw-3*border_space, sh-3*border_space);
     }
     else if(head != NULL) {
         switch(mode) {
             case 0:
                 // Master window
-                XMoveResizeWindow(dis,head->win,0,0,master_size-2,sh-2);
+                XMoveResizeWindow(dis,head->win,border_space,border_space,master_size,sh-2*border_space);
 
                 // Stack
-                for(c=head->next;c;c=c->next) ++n;
+                int x = master_size + 3*border_space;
+                int y = border_space;
+                int tile_height = sw - master_size - 5*border_space;
+                int num_windows = 0;
+
+                for(c=head->next;c;c=c->next) ++num_windows;
                 for(c=head->next;c;c=c->next) {
-                    XMoveResizeWindow(dis,c->win,master_size,y,sw-master_size-2,(sh/n)-2);
-                    y += sh/n;
+                    XMoveResizeWindow(dis,c->win,x,y,tile_height,(sh/num_windows)-2*border_space);
+                    y += sh/num_windows;
                 }
                 break;
             case 1:
                 for(c=head;c;c=c->next) {
-                    XMoveResizeWindow(dis,c->win,0,0,sw,sh);
+                    XMoveResizeWindow(dis,c->win,border_space,border_space,sw-2*border_space,sh-2*border_space);
                 }
                 break;
             default:
@@ -649,7 +654,7 @@ void update_current() {
     for(c=head;c;c=c->next)
         if(current == c) {
             // "Enable" current window
-            XSetWindowBorderWidth(dis,c->win,1);
+            XSetWindowBorderWidth(dis,c->win,BORDER_SIZE);
             XSetWindowBorder(dis,c->win,win_focus);
             XSetInputFocus(dis,c->win,RevertToParent,CurrentTime);
             XRaiseWindow(dis,c->win);
