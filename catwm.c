@@ -616,32 +616,28 @@ void tile() {
     int y = 0;
 
 
-    int tiledSized = sw - master_size - GAP_SIZE;
     int numWindows = 0;
     for(c=head->next;c;c=c->next) ++numWindows;
-    int tiledHeigh = (sh - numWindows * GAP_SIZE);
-    
+    int tiledHeight = (sh - numWindows * GAP_SIZE)/5;
+    int a = BORDER_SIZE + GAP_SIZE;
+    int tiledSized = sw - master_size - 6*a;
+
     // If only one window
     if(head != NULL && head->next == NULL) {
-        XMoveResizeWindow(dis,head->win,BORDER_SIZE,BORDER_SIZE,sw-2*BORDER_SIZE-2*GAP_SIZE,sh-2*BORDER_SIZE-2*GAP_SIZE);
+        XMoveResizeWindow(dis,head->win,a,a,sw-3*a, sh-3*a);
     }
     else if(head != NULL) {
         switch(mode) {
             case 0:
                 // Master window
-                XMoveResizeWindow(dis,head->win,BORDER_SIZE,BORDER_SIZE,master_size-2*BORDER_SIZE-GAP_SIZE,sh-2*BORDER_SIZE-GAP_SIZE);
+                XMoveResizeWindow(dis,head->win,a,a,master_size,sh-3*a);
 
                 // Stack
-                int nc = 0;
-                for(c=head->next;c;c=c->next) ++n;
+                int y = a;
                 for(c=head->next;c;c=c->next) {
-                    ++nc;
-                    if(nc == n) {
-                        XMoveResizeWindow(dis,c->win,master_size,y+BORDER_SIZE,sw-master_size-BORDER_SIZE-2*GAP_SIZE,(sh/n)-2*BORDER_SIZE-2*GAP_SIZE);
-                    } else {
-                        XMoveResizeWindow(dis,c->win,master_size,y+BORDER_SIZE,sw-master_size-BORDER_SIZE-2*GAP_SIZE,(sh/n)-BORDER_SIZE-2*GAP_SIZE);
-                    }
-                    y += sh/n;
+                    int x = master_size + 4*a;
+                    XMoveResizeWindow(dis,c->win,x,y,tiledSized,(sh/numWindows)-3*a);
+                    y += sh/numWindows;
                 }
                 break;
             case 1:
@@ -661,7 +657,7 @@ void update_current() {
     for(c=head;c;c=c->next)
         if(current == c) {
             // "Enable" current window
-            XSetWindowBorderWidth(dis,c->win,7);
+            XSetWindowBorderWidth(dis,c->win,BORDER_SIZE);
             XSetWindowBorder(dis,c->win,win_focus);
             XSetInputFocus(dis,c->win,RevertToParent,CurrentTime);
             XRaiseWindow(dis,c->win);
