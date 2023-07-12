@@ -42,7 +42,7 @@
 
 // Borders and gap
 #define BORDER_SIZE     5
-#define GAP_SIZE        0
+#define GAP_SIZE        5
 
 const char* dmenucmd[] = {"dmenu_run",NULL};
 const char* urxvtcmd[] = {"urxvt",NULL};
