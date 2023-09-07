@@ -57,5 +57,5 @@ Todo
  * Add multiple view ("desktop")
  * Switch to XCB
 
-If you have some particular request, just send me an e-mail, and I will see for it!
+If you have some particular request, just send me [an e-mail](mailto:julien.rinaldini@heig-vd.ch), and I will see for it!
 
