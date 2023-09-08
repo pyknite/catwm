@@ -593,7 +593,7 @@ void start() {
 void swap_master() {
     Window tmp;
 
-    if(head != NULL && current != NULL && current != head && mode == 0) {
+    if(head != NULL && current != NULL && current != head && mode != 2) {
         tmp = head->win;
         head->win = current->win;
         current->win = tmp;
@@ -605,7 +605,15 @@ void swap_master() {
 }
 
 void switch_mode() {
-    mode = (mode == 0) ? 1:0;
+    mode = (mode + 1) % 3;
+    /* master_size will be recomputed with the configured factor. When I coded
+     * horizontal tilling to pyknite, I didn't wanted to change too much how the
+     * WM works, and I noticed that I would need to change the master_size to be
+     * actually a factor to keep it from changing the factor itself. */
+    if (mode == 0)
+        master_size = sw*MASTER_SIZE;
+    else if (mode == 1)
+        master_size = sh*MASTER_SIZE;
     tile();
     update_current();
 }
@@ -620,16 +628,17 @@ void tile() {
         XMoveResizeWindow(dis,head->win,border_space,border_space,sw-3*border_space, sh-3*border_space);
     }
     else if(head != NULL) {
+        int y, x, num_windows;
         switch(mode) {
             case 0:
                 // Master window
                 XMoveResizeWindow(dis,head->win,border_space,border_space,master_size,sh-2*border_space);
 
                 // Stack
-                int x = master_size + 3*border_space;
-                int y = border_space;
+                x = master_size + 3*border_space;
+                y = border_space;
                 int tile_height = sw - master_size - 5*border_space;
-                int num_windows = 0;
+                num_windows = 0;
 
                 for(c=head->next;c;c=c->next) ++num_windows;
                 for(c=head->next;c;c=c->next) {
@@ -638,6 +647,22 @@ void tile() {
                 }
                 break;
             case 1:
+                // Master
+                XMoveResizeWindow(dis,head->win,border_space,border_space,sw-2*border_space,master_size);
+
+                // Stack
+                y = master_size + 3*border_space;
+                x = border_space;
+                int tile_width = sh - master_size - 5*border_space;
+                num_windows = 0;
+
+                for(c=head->next;c;c=c->next) ++num_windows;
+                for(c=head->next;c;c=c->next) {
+                    XMoveResizeWindow(dis,c->win,x,y,(sw/num_windows)-2*border_space,tile_width);
+                    x += sw/num_windows;
+                }
+                break;
+            case 2:
                 for(c=head;c;c=c->next) {
                     XMoveResizeWindow(dis,c->win,border_space,border_space,sw-2*border_space,sh-2*border_space);
                 }
